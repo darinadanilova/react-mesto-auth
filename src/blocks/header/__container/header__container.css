@@ -1,0 +1,14 @@
+.header__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 24px;
+  font-family: "Inter", Arial, sans-serif;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: right;
+  color: #ffffff;
+  background-color: black;
+  margin-top: 51px;
+}
