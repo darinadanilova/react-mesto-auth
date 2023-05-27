@@ -8,4 +8,9 @@
   color: #ffffff;
   margin-top: 15px;
   max-width: 358px;
+  text-decoration: none;
+}
+
+.auths__login:hover {
+  opacity: 0.8;
 }

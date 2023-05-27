@@ -6,7 +6,11 @@
   line-height: 22px;
   text-align: right;
   color: #a9a9a9;
-  max-width: 56px;
   background-color: black;
-  margin-top: 51px;
+  text-decoration: none;
+  padding-bottom: 45px;
+}
+
+.header__signout:hover {
+  opacity: 0.8;
 }

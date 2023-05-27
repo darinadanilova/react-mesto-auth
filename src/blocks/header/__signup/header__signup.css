@@ -6,7 +6,11 @@
   line-height: 22px;
   text-align: right;
   color: #ffffff;
-  max-width: 53px;
   background-color: black;
-  margin-top: 51px;
+  text-decoration: none;
+  padding-bottom: 45px;
+}
+
+.header__signup:hover {
+  opacity: 0.8;
 }

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-function Register({onSignupSubmit}) {
+function Register({onSignUpSubmit}) {
 
-    const [signupEmail, setSignupEmail] = React.useState("");
-    const [signupPassword, setSignupPassword] = React.useState("");
+    const [signupEmail, setSignupEmail] = useState('');
+    const [signupPassword, setSignupPassword] = useState('');
 
     function handleChangeEmail (e) { 
         setSignupEmail(e.target.value);
@@ -15,7 +15,7 @@ function Register({onSignupSubmit}) {
 
     function handleRegister(evt) {
       evt.preventDefault();
-      onSignupSubmit(signupEmail, signupPassword);
+      onSignUpSubmit(signupEmail, signupPassword);
     }
 
 
@@ -65,9 +65,8 @@ function Register({onSignupSubmit}) {
     >Зарегистрироваться</button>
     <p className="auths__subtitle">
         Уже зарегистрированы?
-        <Link to="/sign-in" className="auths__login">Войти</Link>
+        <Link to="/sign-in" className="auths__login">&nbsp;Войти</Link>
     </p>
-
         </form>
     </div>
   );

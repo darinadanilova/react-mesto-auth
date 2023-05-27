@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
-function Login(onSignInSubmit) {
+function Login({onSignInSubmit}) {
   
-    const [signinEmail, setSigninEmail] = React.useState("");
-    const [signinPassword, setSigninPassword] = React.useState("");
+    const [signinEmail, setSigninEmail] = useState('');
+    const [signinPassword, setSigninPassword] = useState('');
 
     function handleChangeEmail (e) { 
         setSigninEmail(e.target.value);

@@ -25,6 +25,7 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState(null);
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
+
   const [infoTooltipSuccess, setInfoTooltipSuccess] = React.useState(false);
   const [infoTooltipUnsuccess, setInfoTooltipUnsuccess] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -32,6 +33,7 @@ function App() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
+    if (loggedIn) {
     api
       .getInfo()
       .then(setCurrentUser)
@@ -46,7 +48,8 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+    }
+    }, [loggedIn]);
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
@@ -64,9 +67,9 @@ function App() {
     setSelectedCard(card);
   };
 
-  function handleLogIn() {
-    setLoggedIn(true);
-  }
+  //function handleLogIn() {
+  //  setLoggedIn(true);
+  //}
 
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
@@ -143,22 +146,15 @@ function App() {
       });
   }
 
-  function handleSignIn(data) {
-    login(data.email, data.password)
+  function checkTokens(token) {
+    checkToken(token)
       .then((res) => {
-        if (res.token) {
-          const token = res.token;
-          localStorage.setItem("jwt", token);
-          handleLogIn();
-          setEmail(data.email);
-          navigate('/', {replace: true})
-        }
+        setEmail(res.data.email);
+        setLoggedIn(true);
+        navigate('/');
       })
-      .catch((err) => {
-        console.log(err);
-        setInfoTooltipUnsuccess(true);
-      })  
-  }
+      .catch((err) => console.log(err));
+  };
 
   function handleSignUp(email, password) {
     register(email, password)
@@ -171,25 +167,47 @@ function App() {
       })
   }
 
+  function handleSignIn(email, password) {
+    login(email, password)
+      .then((res) => {
+          localStorage.setItem("jwt", res.token);
+          return res.token;
+      })
+      .then((token) => checkToken(token))
+      .catch((err) => {
+        console.log(err);
+        setInfoTooltipUnsuccess(true);
+      })  
+  }
+
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      checkTokens(token);
+    }
+  });
+
+
     // Функция выхода пользователя
     function handleSignOut () {
-      localStorage.removeItem('token');
+      localStorage.removeItem('jwt');
       setLoggedIn(false);
   }
 
      // Верификация токена
-     useEffect(() => {
-      const token = localStorage.getItem('token')
-      if (token) { checkToken(token)
-          .then((res) => {
-            setEmail(res.data.email);
-            setLoggedIn(true);
-            navigate('/') })
-            .catch((err) => {
-              console.log(err);
-            })
-      }
-    }, [navigate, loggedIn])
+    // useEffect(() => {
+    //  const token = localStorage.getItem('token')
+    //  if (token) { checkToken(token)
+    //      .then((res) => {
+    //        setEmail(res.data.email);
+    //        setLoggedIn(true);
+    //        navigate('/') })
+    //        .catch((err) => {
+    //          console.log(err);
+    //        })
+    //  }
+    //});
 
 
   return (
@@ -198,20 +216,20 @@ function App() {
         <Header
         loggedIn={loggedIn}
         email = {email}
-        isSignOut = {handleSignOut}
+        onSignout = {handleSignOut}
         />
 
 <Routes>
 <Route 
   path ="/sign-up"
           element = {<Register
-            onSignUp={handleSignUp} />}>
+            onSignUpSubmit={handleSignUp} />}>
 </Route>
 
 <Route 
   path ="/sign-in"
           element = {<Login
-            onSignIn={handleSignIn} />}>
+            onSignInSubmit={handleSignIn} loggedIn={loggedIn} />}>
 </Route>
 
 <Route 
