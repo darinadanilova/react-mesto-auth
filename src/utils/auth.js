@@ -25,8 +25,7 @@ export function login(email, password) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 }
 
 export function checkToken(token) {
@@ -36,6 +35,5 @@ export function checkToken(token) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 }

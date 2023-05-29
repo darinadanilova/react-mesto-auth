@@ -11,10 +11,9 @@ import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 import Register from "./Register.js";
 import Login from "./Login.js";
-import ProtectedRoute from "./ProtectedRoute.js";
 import InfoTooltip from "./InfoTooltip.js";
 import { register, login, checkToken } from "../utils/auth.js";
-import { Routes, Route, useNavigate} from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -34,22 +33,22 @@ function App() {
 
   React.useEffect(() => {
     if (loggedIn) {
-    api
-      .getInfo()
-      .then(setCurrentUser)
-      .catch((err) => {
-        console.log(err);
-      });
-    api
-      .getCard()
-      .then((res) => {
-        setCards(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      api
+        .getInfo()
+        .then(setCurrentUser)
+        .catch((err) => {
+          console.log(err);
+        });
+      api
+        .getCard()
+        .then((res) => {
+          setCards(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    }, [loggedIn]);
+  }, [loggedIn]);
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
@@ -66,10 +65,6 @@ function App() {
   const handleCardClick = (card) => {
     setSelectedCard(card);
   };
-
-  //function handleLogIn() {
-  //  setLoggedIn(true);
-  //}
 
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
@@ -146,16 +141,24 @@ function App() {
       });
   }
 
-  function checkTokens(token) {
+  function tokenCheck(token) {
     checkToken(token)
       .then((res) => {
         setEmail(res.data.email);
         setLoggedIn(true);
-        navigate('/');
+        navigate("/");
       })
       .catch((err) => console.log(err));
-  };
+  }
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      tokenCheck(token);
+    }
+  });
+
+  //Зарегистрироваться
   function handleSignUp(email, password) {
     register(email, password)
       .then(() => {
@@ -164,90 +167,67 @@ function App() {
       .catch((err) => {
         console.log(err);
         setInfoTooltipUnsuccess(true);
-      })
+      });
   }
 
+  //Войти
   function handleSignIn(email, password) {
     login(email, password)
       .then((res) => {
-          localStorage.setItem("token", res.token);
-          return res.token;
+        localStorage.setItem("token", res.token);
+        return res.token;
       })
       .then((token) => checkToken(token))
       .catch((err) => {
         console.log(err);
         setInfoTooltipUnsuccess(true);
-      })  
+      });
   }
 
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      checkTokens(token);
-    }
-  });
-
-
-    // Функция выхода пользователя
-    function handleSignOut () {
-      localStorage.removeItem('token');
-      setLoggedIn(false);
+  // Выйти
+  function handleSignOut() {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
   }
-
-     // Верификация токена
-    // useEffect(() => {
-    //  const token = localStorage.getItem('token')
-    //  if (token) { checkToken(token)
-    //      .then((res) => {
-    //        setEmail(res.data.email);
-    //        setLoggedIn(true);
-    //        navigate('/') })
-    //        .catch((err) => {
-    //          console.log(err);
-    //        })
-    //  }
-    //});
-
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header
-        loggedIn={loggedIn}
-        email = {email}
-        onSignout = {handleSignOut}
-        />
+        <Header loggedIn={loggedIn} email={email} onSignout={handleSignOut} />
 
-<Routes>
-<Route 
-  path ="/sign-up"
-          element = {<Register
-            onSignUpSubmit={handleSignUp} />}>
-</Route>
+        <Routes>
+          <Route
+            path="/sign-up"
+            element={<Register onSignUpSubmit={handleSignUp} />}
+          ></Route>
 
-<Route 
-  path ="/sign-in"
-          element = {<Login
-            onSignInSubmit={handleSignIn} loggedIn={loggedIn} />}>
-</Route>
+          <Route
+            path="/sign-in"
+            element={
+              <Login onSignInSubmit={handleSignIn} loggedIn={loggedIn} />
+            }
+          ></Route>
 
-<Route 
-  path ="/"
-          element = {<ProtectedRoute
-            loggedIn={loggedIn}
-            component={<Main
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              onCardClick={handleCardClick}
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-              onUpdateAvatar={handleUpdateAvatar}
-            />} />}>
-</Route>
-</Routes>
+          <Route
+            path="/"
+            element={
+              loggedIn ? (
+                <Main
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  cards={cards}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+              ) : (
+                <Login to="/sign-in" />
+              )
+            }
+          ></Route>
+        </Routes>
+
         <PopupWithForm
           title="Вы уверены?"
           name="delete"
@@ -276,15 +256,15 @@ function App() {
         />
 
         <InfoTooltip
-        isOpen={infoTooltipSuccess}
-        onClose={closeAllPopups}
-        isSuccess={true}
+          isOpen={infoTooltipSuccess}
+          onClose={closeAllPopups}
+          isSuccess={true}
         />
 
         <InfoTooltip
-        isOpen={infoTooltipUnsuccess}
-        onClose={closeAllPopups}
-        isSuccess={false}
+          isOpen={infoTooltipUnsuccess}
+          onClose={closeAllPopups}
+          isSuccess={false}
         />
 
         <Footer />
