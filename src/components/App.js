@@ -170,7 +170,7 @@ function App() {
   function handleSignIn(email, password) {
     login(email, password)
       .then((res) => {
-          localStorage.setItem("jwt", res.token);
+          localStorage.setItem("token", res.token);
           return res.token;
       })
       .then((token) => checkToken(token))
@@ -182,7 +182,7 @@ function App() {
 
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
+    const token = localStorage.getItem('token');
     if (token) {
       checkTokens(token);
     }
@@ -191,7 +191,7 @@ function App() {
 
     // Функция выхода пользователя
     function handleSignOut () {
-      localStorage.removeItem('jwt');
+      localStorage.removeItem('token');
       setLoggedIn(false);
   }
 

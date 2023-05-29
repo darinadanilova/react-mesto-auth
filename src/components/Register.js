@@ -59,7 +59,7 @@ function Register({onSignUpSubmit}) {
     <button
          className="auths__button"
          aria-label="auths-button"
-         type="button"
+         type="submit"
          name="auths-button"
          id="auths-button"
     >Зарегистрироваться</button>
