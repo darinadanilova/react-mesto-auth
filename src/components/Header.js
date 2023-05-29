@@ -13,7 +13,7 @@ function Header(props) {
             <Link
               to="/sign-in"
               className="header__signout"
-              onClick={props.onSignout}
+              onClick={props.onSignOut}
             >
               Выйти
             </Link>

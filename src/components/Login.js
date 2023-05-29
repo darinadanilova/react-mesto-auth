@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 
 function Login({ onSignInSubmit }) {
-  const [signinEmail, setSigninEmail] = useState("");
-  const [signinPassword, setSigninPassword] = useState("");
+  const [signInEmail, setSignInEmail] = useState("");
+  const [signInPassword, setSignInPassword] = useState("");
 
   function handleChangeEmail(e) {
-    setSigninEmail(e.target.value);
+    setSignInEmail(e.target.value);
   }
   function handleChangePassword(e) {
-    setSigninPassword(e.target.value);
+    setSignInPassword(e.target.value);
   }
 
   function handleLogin(evt) {
     evt.preventDefault();
-    onSignInSubmit(signinEmail, signinPassword);
+    onSignInSubmit(signInEmail, signInPassword);
   }
 
   return (
@@ -23,7 +23,7 @@ function Login({ onSignInSubmit }) {
         <input
           required
           onChange={handleChangeEmail}
-          value={signinEmail || ""}
+          value={signInEmail || ""}
           type="email"
           className="auths__input auths__input_email"
           id="email"
@@ -37,7 +37,7 @@ function Login({ onSignInSubmit }) {
         <input
           required
           onChange={handleChangePassword}
-          value={signinPassword || ""}
+          value={signInPassword || ""}
           type="password"
           className="auths__input auths__input_password"
           id="password"

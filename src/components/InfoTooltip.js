@@ -2,7 +2,7 @@ import React from "react";
 import imgSuccess from "../images/success.png";
 import imgUnsuccess from "../images/unsuccess.png";
 
-function InfoTooltip({ isOpen, onClose, isSuccess }) {
+function InfoTooltip({ isOpen, onClose, isSuccessInfoTooltipStatus }) {
   return (
     <div className={`popup ${isOpen ? "popup_opened" : ""}`}>
       <div className={"popup__container popup__container-notification"}>
@@ -16,12 +16,12 @@ function InfoTooltip({ isOpen, onClose, isSuccess }) {
         ></button>
         <img
           className="popup__notification-img"
-          src={isSuccess ? imgSuccess : imgUnsuccess}
+          src={isSuccessInfoTooltipStatus ? imgSuccess : imgUnsuccess}
           alt=""
         />
         <h2 className="popup__notification-title">
-          {isSuccess
-            ? "Вы успешно зарегестрировались!"
+          {isSuccessInfoTooltipStatus
+            ? "Вы успешно зарегистрировались!"
             : "Что-то пошло не так! Попробуйте еще раз"}
         </h2>
       </div>

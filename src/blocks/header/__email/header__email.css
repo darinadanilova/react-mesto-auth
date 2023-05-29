@@ -8,5 +8,13 @@
   color: #ffffff;
   background-color: black;
   text-decoration: none;
-  padding-bottom: 45px;
+  padding-bottom: 18px;
+  margin: 0px;
+}
+
+@media screen and (min-width: 768px) {
+  .header__email {
+  padding-bottom: 46px;
+  padding-top: 6px;
+  }
 }

@@ -1,14 +1,22 @@
 .header__container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  column-gap: 24px;
-  font-family: "Inter", Arial, sans-serif;
-  font-style: normal;
-  font-size: 18px;
-  line-height: 22px;
   text-align: right;
   color: #ffffff;
   background-color: black;
-  margin-top: 51px;
+  margin-top: 12px;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+}
+
+@media screen and (min-width: 768px) {
+  .header__container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: end;
+    column-gap: 24px;
+    margin-top: 0px;
+    border-bottom: none;
+  }
 }

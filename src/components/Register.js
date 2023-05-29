@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Register({ onSignUpSubmit }) {
-  const [signupEmail, setSignupEmail] = useState("");
-  const [signupPassword, setSignupPassword] = useState("");
+  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signUpPassword, setSignUpPassword] = useState("");
 
   function handleChangeEmail(e) {
-    setSignupEmail(e.target.value);
+    setSignUpEmail(e.target.value);
   }
   function handleChangePassword(e) {
-    setSignupPassword(e.target.value);
+    setSignUpPassword(e.target.value);
   }
 
   function handleRegister(evt) {
     evt.preventDefault();
-    onSignUpSubmit(signupEmail, signupPassword);
+    onSignUpSubmit(signUpEmail, signUpPassword);
   }
 
   return (
@@ -24,7 +24,7 @@ function Register({ onSignUpSubmit }) {
         <input
           required
           onChange={handleChangeEmail}
-          value={signupEmail || ""}
+          value={signUpEmail || ""}
           type="email"
           className="auths__input auths__input_email"
           id="email"
@@ -38,7 +38,7 @@ function Register({ onSignUpSubmit }) {
         <input
           required
           onChange={handleChangePassword}
-          value={signupPassword || ""}
+          value={signUpPassword || ""}
           type="password"
           className="auths__input auths__input_password"
           id="password"

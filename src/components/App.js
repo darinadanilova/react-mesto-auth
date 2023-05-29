@@ -13,7 +13,8 @@ import Register from "./Register.js";
 import Login from "./Login.js";
 import InfoTooltip from "./InfoTooltip.js";
 import { register, login, checkToken } from "../utils/auth.js";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -25,8 +26,9 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
 
-  const [infoTooltipSuccess, setInfoTooltipSuccess] = React.useState(false);
-  const [infoTooltipUnsuccess, setInfoTooltipUnsuccess] = React.useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
+  const [isSuccessInfoTooltipStatus, setIsSuccessInfoTooltipStatus] =
+    React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const navigate = useNavigate();
@@ -71,8 +73,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setSelectedCard(null);
-    setInfoTooltipSuccess(false);
-    setInfoTooltipUnsuccess(false);
+    setIsInfoTooltipOpen(false);
   };
 
   function handleCardLike(card) {
@@ -141,7 +142,7 @@ function App() {
       });
   }
 
-  function tokenCheck(token) {
+  function handleTokenCheck(token) {
     checkToken(token)
       .then((res) => {
         setEmail(res.data.email);
@@ -154,19 +155,22 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      tokenCheck(token);
+      handleTokenCheck(token);
     }
-  });
+  }, []);
 
   //Зарегистрироваться
   function handleSignUp(email, password) {
     register(email, password)
       .then(() => {
-        setInfoTooltipSuccess(true);
+        setIsInfoTooltipOpen(true);
+        setIsSuccessInfoTooltipStatus(true);
+        navigate("/sign-in", { replace: true });
       })
       .catch((err) => {
         console.log(err);
-        setInfoTooltipUnsuccess(true);
+        setIsInfoTooltipOpen(true);
+        setIsSuccessInfoTooltipStatus(false);
       });
   }
 
@@ -174,13 +178,17 @@ function App() {
   function handleSignIn(email, password) {
     login(email, password)
       .then((res) => {
-        localStorage.setItem("token", res.token);
-        return res.token;
+        if (res.token) {
+          localStorage.setItem("token", res.token);
+          setLoggedIn(true);
+          setEmail(email);
+          navigate("/", { replace: true });
+        }
       })
-      .then((token) => checkToken(token))
       .catch((err) => {
         console.log(err);
-        setInfoTooltipUnsuccess(true);
+        setIsInfoTooltipOpen(true);
+        setIsSuccessInfoTooltipStatus(false);
       });
   }
 
@@ -193,36 +201,58 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header loggedIn={loggedIn} email={email} onSignout={handleSignOut} />
+        <Header loggedIn={loggedIn} email={email} onSignOut={handleSignOut} />
 
         <Routes>
           <Route
             path="/sign-up"
-            element={<Register onSignUpSubmit={handleSignUp} />}
+            element={
+              <Register
+                onSignUpSubmit={handleSignUp}
+                isOpen={isInfoTooltipOpen}
+                onClose={closeAllPopups}
+                isSuccessInfoTooltipStatus={isSuccessInfoTooltipStatus}
+              />
+            }
           ></Route>
 
           <Route
             path="/sign-in"
             element={
-              <Login onSignInSubmit={handleSignIn} loggedIn={loggedIn} />
+              <Login
+                onSignInSubmit={handleSignIn}
+                loggedIn={loggedIn}
+                isOpen={isInfoTooltipOpen}
+                onClose={closeAllPopups}
+                isSuccessInfoTooltipStatus={isSuccessInfoTooltipStatus}
+              />
             }
           ></Route>
 
           <Route
             path="/"
             element={
+              <ProtectedRoute
+                element={Main}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                onCardClick={handleCardClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+                loggedIn={loggedIn}
+              />
+            }
+          ></Route>
+
+          <Route
+            path="/*"
+            element={
               loggedIn ? (
-                <Main
-                  onEditProfile={handleEditProfileClick}
-                  onAddPlace={handleAddPlaceClick}
-                  onEditAvatar={handleEditAvatarClick}
-                  onCardClick={handleCardClick}
-                  cards={cards}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                />
+                <Navigate to="/sign-in"></Navigate>
               ) : (
-                <Login to="/sign-in" />
+                <Navigate to="/"></Navigate>
               )
             }
           ></Route>
@@ -256,15 +286,9 @@ function App() {
         />
 
         <InfoTooltip
-          isOpen={infoTooltipSuccess}
+          isOpen={isInfoTooltipOpen}
           onClose={closeAllPopups}
-          isSuccess={true}
-        />
-
-        <InfoTooltip
-          isOpen={infoTooltipUnsuccess}
-          onClose={closeAllPopups}
-          isSuccess={false}
+          isSuccessInfoTooltipStatus={isSuccessInfoTooltipStatus}
         />
 
         <Footer />

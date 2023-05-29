@@ -1,15 +1,15 @@
-const BaseUrl = "https://auth.nomoreparties.co";
+const baseUrl = "https://auth.nomoreparties.co";
 
 function checkResponse(res) {
   if (res.ok) {
     return res.json();
   } else {
-    Promise.reject(`Ошибка: ${res.status}`);
+    return Promise.reject(`Ошибка: ${res.status}`);
   }
 }
 
 export function register(email, password) {
-  return fetch(`${BaseUrl}/signup`, {
+  return fetch(`${baseUrl}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -19,7 +19,7 @@ export function register(email, password) {
 }
 
 export function login(email, password) {
-  return fetch(`${BaseUrl}/signin`, {
+  return fetch(`${baseUrl}/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export function login(email, password) {
 }
 
 export function checkToken(token) {
-  return fetch(`${BaseUrl}/users/me`, {
+  return fetch(`${baseUrl}/users/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
