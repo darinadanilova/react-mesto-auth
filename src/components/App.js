@@ -209,7 +209,6 @@ function App() {
             element={
               <Register
                 onSignUpSubmit={handleSignUp}
-                isOpen={isInfoTooltipOpen}
                 onClose={closeAllPopups}
                 isSuccessInfoTooltipStatus={isSuccessInfoTooltipStatus}
               />
@@ -221,7 +220,6 @@ function App() {
             element={
               <Login
                 onSignInSubmit={handleSignIn}
-                loggedIn={loggedIn}
                 isOpen={isInfoTooltipOpen}
                 onClose={closeAllPopups}
                 isSuccessInfoTooltipStatus={isSuccessInfoTooltipStatus}
